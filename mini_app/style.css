@@ -1,0 +1,162 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background: #f5f7fa;
+    color: #111;
+}
+
+.app {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+}
+
+header {
+    padding: 15px 0 30px;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: 3px;
+}
+
+.subtitle {
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-top: 4px;
+    color: #777;
+}
+
+.hero {
+    background: white;
+    border-radius: 24px;
+    padding: 28px;
+
+    margin-bottom: 18px;
+}
+
+.hero h1 {
+    font-size: 34px;
+    line-height: 1.05;
+    margin: 0 0 15px;
+}
+
+.hero p {
+    color: #777;
+    line-height: 1.5;
+}
+
+.main-button {
+    width: 100%;
+
+    border: none;
+    border-radius: 14px;
+
+    padding: 16px;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    background: #111;
+    color: white;
+
+    cursor: pointer;
+}
+
+.advantages {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 10px;
+
+    margin-bottom: 30px;
+}
+
+.advantage {
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 15px 8px;
+
+    text-align: center;
+}
+
+.advantage b {
+    display: block;
+    font-size: 20px;
+}
+
+.advantage span {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 12px;
+
+    color: #777;
+}
+
+h2 {
+    font-size: 22px;
+    margin: 25px 0 15px;
+}
+
+.services {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+}
+
+.service {
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 18px;
+}
+
+.service-icon {
+    font-size: 30px;
+    margin-bottom: 12px;
+}
+
+.service b {
+    display: block;
+}
+
+.service span {
+    display: block;
+
+    color: #777;
+
+    font-size: 13px;
+
+    margin-top: 6px;
+}
+
+.trust {
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 20px;
+
+    margin-top: 25px;
+}
+
+.trust p {
+    color: #555;
+}
