@@ -1,0 +1,25 @@
+.git
+.github
+.gitignore
+.kilo
+
+# Secrets must never enter the image
+.env
+.env.*
+!.env.example
+
+# Local environments and vendored copies of site-packages
+venv
+.venv
+vendor
+
+__pycache__
+*.py[cod]
+.pytest_cache
+
+# Runtime artifacts
+*.log
+*.err
+*.db
+*.sqlite
+*.sqlite3
