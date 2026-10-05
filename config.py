@@ -15,6 +15,7 @@ class Config:
     telegram_api_hash: str | None = None
     session_string: str | None = None
     owner_session: str | None = None
+    telegram_proxy: str | None = None
 
 def load_config() -> Config:
     token = os.getenv("BOT_TOKEN", "").strip()
@@ -26,6 +27,7 @@ def load_config() -> Config:
     telegram_api_hash = os.getenv("TELEGRAM_API_HASH", "").strip()
     session_string = os.getenv("SESSION_STRING", "").strip()
     owner_session = os.getenv("OWNER_SESSION", "").strip()
+    telegram_proxy = os.getenv("TELEGRAM_PROXY", "").strip() or None
     return Config(
         bot_token=token,
         admin_chat_id=admin_chat_id,
@@ -36,4 +38,5 @@ def load_config() -> Config:
         telegram_api_hash=telegram_api_hash or None,
         session_string=session_string or None,
         owner_session=owner_session or None,
+        telegram_proxy=telegram_proxy,
     )

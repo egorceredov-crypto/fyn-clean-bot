@@ -11,6 +11,7 @@ import string
 import logging
 from datetime import datetime, time, timedelta
 from html import escape
+from urllib.parse import urlparse
 import aiosqlite
 
 from aiogram import Bot, Dispatcher, F
@@ -200,6 +201,9 @@ SERVICE_INFO = {
 cfg = load_config()
 dp = Dispatcher()
 logger = logging.getLogger(__name__)
+
+# Таймаут проверки доступности прокси перед стартом (секунды)
+PROXY_PROBE_TIMEOUT = 5
 
 class PrivateChatFilter:
     async def __call__(self, handler, event, data):
@@ -4248,6 +4252,48 @@ async def check_abandoned_orders(bot):
             )
 
 
+async def _build_bot_session(proxy_url: str | None) -> "AiohttpSession | None":
+    """Создаёт сессию с прокси, только если прокси задан и реально доступен.
+
+    Прокси — необязательная настройка. Если он не указан, недоступен или
+    настроить его не удалось, возвращается None и aiogram использует
+    обычное прямое подключение.
+    """
+    if not proxy_url:
+        print("🔌 Подключение без прокси")
+        return None
+
+    raw = proxy_url.strip()
+    parsed = urlparse(raw if "://" in raw else f"socks5://{raw}")
+    host = parsed.hostname
+    default_port = 1080 if parsed.scheme.startswith("socks") else 8080
+    port = parsed.port or default_port
+
+    if not host:
+        print(f"⚠️ Некорректный TELEGRAM_PROXY: {raw} — подключаюсь без прокси")
+        return None
+
+    try:
+        _, writer = await asyncio.wait_for(
+            asyncio.open_connection(host, port),
+            timeout=PROXY_PROBE_TIMEOUT
+        )
+        writer.close()
+        try:
+            await writer.wait_closed()
+        except Exception:
+            pass
+    except Exception as e:
+        print(f"⚠️ Прокси {host}:{port} недоступен ({e}) — подключаюсь без прокси")
+        return None
+
+    try:
+        return AiohttpSession(proxy=raw)
+    except Exception as e:
+        print(f"⚠️ Не удалось настроить прокси {raw} ({e}) — подключаюсь без прокси")
+        return None
+
+
 async def main():
     global telethon_client
 
@@ -4255,9 +4301,11 @@ async def main():
     print("⚙️ Инициализация базы данных...")
     await init_db()
 
+    session = await _build_bot_session(cfg.telegram_proxy)
+
     bot = Bot(
         token=cfg.bot_token,
-        session=AiohttpSession(proxy=os.getenv("TELEGRAM_PROXY")) if os.getenv("TELEGRAM_PROXY") else None,
+        session=session,
         default=DefaultBotProperties(
             parse_mode=ParseMode.HTML
         )
